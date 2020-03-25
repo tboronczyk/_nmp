@@ -1,0 +1,15 @@
+ARG php_version
+
+FROM php:${php_version}-fpm
+
+WORKDIR /app
+
+ARG php_deps
+ARG php_extensions
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends unzip $php_deps && \
+    rm -rf /var/lib/apt/lists/* && \
+    docker-php-ext-install $php_extensions
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
